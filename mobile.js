@@ -104,7 +104,13 @@ function loadPhotos() {
         img.onload = () => {
             console.log(`Successfully loaded: ${photo.filename}`);
             container.classList.add('loaded');
+            loading.remove(); // Remove loading indicator when first image loads
         };
+
+        // Add image to container
+        container.appendChild(img);
+        // Add container to gallery
+        gallery.appendChild(container);
 
         img.onerror = () => {
             console.error(`Failed to load: ${photo.filename}`);
