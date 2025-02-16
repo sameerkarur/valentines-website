@@ -1,0 +1,234 @@
+:root {
+    --primary-color: #ff69b4;
+    --secondary-color: #ff1493;
+    --text-color: #333;
+    --bg-color: #fff5f5;
+    --player-bg: rgba(255, 255, 255, 0.95);
+    --header-height: 120px;
+    --controls-height: 60px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.hearts-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    opacity: 0.1;
+    background: 
+        radial-gradient(circle at 50% 50%, var(--primary-color) 0.5px, transparent 0.5px) 0 0 / 20px 20px,
+        radial-gradient(circle at 50% 50%, var(--secondary-color) 0.5px, transparent 0.5px) 10px 10px / 20px 20px;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    height: var(--header-height);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+header h1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+header .subtitle {
+    font-size: 1em;
+    opacity: 0.9;
+}
+
+.mobile-controls {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: var(--player-bg);
+    padding: 10px;
+    z-index: 1000;
+    height: var(--controls-height);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-controls .music-player,
+.mobile-controls .style-controls,
+.mobile-controls .slideshow-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mobile-controls select {
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background: white;
+    font-size: 14px;
+}
+
+.mobile-controls .control-btn {
+    padding: 8px;
+    border-radius: 4px;
+    background: white;
+    border: 1px solid #ddd;
+    cursor: pointer;
+}
+
+.mobile-controls .control-btn:hover {
+    background: #f0f0f0;
+}
+
+main {
+    padding: 10px;
+    margin-top: calc(var(--header-height) + var(--controls-height));
+}
+
+.gallery-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    padding: 10px;
+}
+
+.gallery-container img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.gallery-container img:hover {
+    transform: scale(1.05);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 2000;
+}
+
+.modal .modal-content {
+    max-width: 100%;
+    max-height: 90vh;
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    object-fit: contain;
+}
+
+.modal .close-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 2001;
+}
+
+.modal .modal-caption {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    text-align: center;
+}
+
+.visualizer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    z-index: 999;
+    pointer-events: none;
+}
+
+.error-message {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ff4444;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 2000;
+}
+
+.error-message .error-close {
+    margin-left: 10px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 20px;
+    font-size: 0.9em;
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes zoom {
+    0% { transform: scale(0.95); }
+    100% { transform: scale(1.05); }
+}
+
+.pulse { animation: pulse 1s infinite; }
+.bounce { animation: bounce 1s infinite; }
+.rotate { animation: rotate 2s infinite linear; }
+.zoom { animation: zoom 1s infinite alternate; }
