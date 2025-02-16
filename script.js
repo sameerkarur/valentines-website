@@ -115,9 +115,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load available songs
     const songs = [
-        { name: 'Perfect', file: '/valentines-website/music/perfect.mp3' },
-        { name: 'All of Me', file: '/valentines-website/music/all-of-me.mp3' },
-        { name: 'A Thousand Years', file: '/valentines-website/music/a-thousand-years.mp3' }
+        { name: 'Perfect', file: 'music/perfect.mp3' },
+        { name: 'All of Me', file: 'music/all-of-me.mp3' },
+        { name: 'A Thousand Years', file: 'music/a-thousand-years.mp3' }
     ];
 
     // Verify music files are accessible
