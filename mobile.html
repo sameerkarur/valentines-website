@@ -7,7 +7,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="mobile.css">
+    <script>
+        // Get base URL for GitHub Pages
+        const cssBaseUrl = window.location.hostname === 'sameerkarur.github.io'
+            ? '/valentines-website'
+            : '';
+    </script>
+    <link rel="stylesheet" href="" id="mobileCss">
+    <script>
+        // Set the CSS path dynamically
+        document.getElementById('mobileCss').href = `${cssBaseUrl}/mobile.css`;
+    </script>
 </head>
 <body>
     <div class="hearts-bg"></div>

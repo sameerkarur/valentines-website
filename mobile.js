@@ -1,20 +1,33 @@
 // Constants
 const SONGS = [
-    { name: 'Perfect', path: 'music/perfect.mp3' },
-    { name: 'All of Me', path: 'music/all_of_me.mp3' },
-    { name: 'A Thousand Years', path: 'music/a_thousand_years.mp3' }
+    { name: 'Perfect', path: `${baseUrl}/music/perfect.mp3` },
+    { name: 'All of Me', path: `${baseUrl}/music/all_of_me.mp3` },
+    { name: 'A Thousand Years', path: `${baseUrl}/music/a_thousand_years.mp3` }
 ];
 
+// Get the base URL for GitHub Pages
+const baseUrl = window.location.hostname === 'sameerkarur.github.io'
+    ? '/valentines-website'
+    : '';
+
 const PHOTOS = [
-    'images/photo1.jpg',
-    'images/photo2.jpg',
-    'images/photo3.jpg',
-    'images/photo4.jpg',
-    'images/photo5.jpg',
-    'images/photo6.jpg',
-    'images/photo7.jpg',
-    'images/photo8.jpg'
-];
+    'DSC00873.jpg',
+    'DSC00877.JPG',
+    'DSC00891.jpg',
+    'DSC00903.JPG',
+    'DSC00908.JPG',
+    'DSC00920.JPG',
+    'DSC00937.JPG',
+    'DSC00963.jpg',
+    'IMG-20250104-WA0059.jpg',
+    'IMG-20250104-WA0060.jpg',
+    'IMG-20250104-WA0065.jpg',
+    'IMG_20250101_081013249.jpg',
+    'IMG_20250102_093659519.jpg',
+    'IMG_20250103_151133702.jpg',
+    'IMG_20250103_211044204.jpg',
+    'InShot_20250106_103710485.jpg'
+].map(filename => `${baseUrl}/images/${filename}`);
 
 // Audio Context and Analyzer
 let audioContext;
@@ -61,13 +74,49 @@ function loadSongs() {
 // Load photos into gallery
 function loadPhotos() {
     const gallery = document.querySelector('.gallery-container');
-    PHOTOS.forEach((photo, index) => {
+    if (!gallery) {
+        console.error('Gallery container not found');
+        return;
+    }
+
+    // Clear existing content
+    gallery.innerHTML = '';
+
+    // Add loading indicator
+    const loading = document.createElement('div');
+    loading.className = 'loading';
+    loading.textContent = 'Loading photos...';
+    gallery.appendChild(loading);
+
+    // Load each photo
+    PHOTOS.forEach((photoUrl, index) => {
         const img = document.createElement('img');
-        img.src = photo;
+        img.src = photoUrl;
         img.alt = `Photo ${index + 1}`;
         img.dataset.index = index;
+        img.className = 'gallery-image';
+
+        // Add loading and error handlers
+        img.onload = () => {
+            console.log(`Successfully loaded photo ${index + 1}`);
+        };
+
+        img.onerror = () => {
+            console.error(`Failed to load photo ${index + 1}: ${photoUrl}`);
+            img.src = 'data:image/svg+xml,' + encodeURIComponent(`
+                <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+                    <rect width="200" height="200" fill="#f8f9fa"/>
+                    <text x="50%" y="45%" text-anchor="middle" fill="#dc3545" style="font-size: 16px;">Image Failed to Load</text>
+                    <text x="50%" y="55%" text-anchor="middle" fill="#6c757d" style="font-size: 12px;">Photo ${index + 1}</text>
+                </svg>
+            `);
+        };
+
         gallery.appendChild(img);
     });
+
+    // Remove loading indicator
+    loading.remove();
 }
 
 // Setup event listeners
