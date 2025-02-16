@@ -8,6 +8,71 @@
     --error-text: white;
 }
 
+.player-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: var(--player-bg);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.music-player {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.control-btn {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.control-btn:hover {
+    background: #f0f0f0;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.volume-control input[type="range"] {
+    width: 80px;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+}
+
+.style-controls,
+.slideshow-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+select {
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background: white;
+    cursor: pointer;
+}
+
+select:hover {
+    border-color: #ccc;
+}
+
 * {
     margin: 0;
     padding: 0;
