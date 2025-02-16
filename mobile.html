@@ -80,7 +80,11 @@
         <p>Made with ❤️</p>
     </footer>
 
-    <audio id="bgMusic" loop></audio>
+    <audio id="bgMusic" preload="auto" crossorigin="anonymous" loop>
+        <source src="music/perfect.mp3" type="audio/mpeg">
+        <source src="music/all-of-me.mp3" type="audio/mpeg">
+        <source src="music/a-thousand-years.mp3" type="audio/mpeg">
+    </audio>
     <script>
         // Log page load
         console.log('Page loading...');

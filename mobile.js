@@ -1,12 +1,34 @@
-// Use baseUrl from HTML
-const baseUrl = window.baseUrl;
-console.log('Using baseUrl from HTML:', baseUrl);
+// Get base URL for GitHub Pages
+const baseUrl = window.location.origin + (window.location.pathname.includes('valentines-website') 
+    ? '/valentines-website'
+    : '');
+console.log('Base URL:', baseUrl);
+
+// Initialize audio context
+let audioContext = null;
+let analyser = null;
+let isPlaying = false;
+
+async function initAudioContext() {
+    try {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        const audio = document.getElementById('bgMusic');
+        const source = audioContext.createMediaElementSource(audio);
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+        console.log('Audio context initialized');
+    } catch (error) {
+        console.error('Error initializing audio context:', error);
+        showError(`Audio initialization error: ${error.message}`);
+    }
+}
 
 // Constants
 const SONGS = [
-    { name: 'Perfect', path: `${baseUrl}/music/perfect.mp3` },
-    { name: 'All of Me', path: `${baseUrl}/music/all-of-me.mp3` },
-    { name: 'A Thousand Years', path: `${baseUrl}/music/a-thousand-years.mp3` }
+    { name: 'Perfect', path: 'music/perfect.mp3' },
+    { name: 'All of Me', path: 'music/all-of-me.mp3' },
+    { name: 'A Thousand Years', path: 'music/a-thousand-years.mp3' }
 ];
 
 // Debug log the base URL and full paths
@@ -100,6 +122,7 @@ function loadPhotos() {
 
         const img = document.createElement('img');
         img.src = `${baseUrl}/images/${photo.filename}`;
+        img.crossOrigin = 'anonymous'; // Add CORS support
         img.alt = photo.title;
         img.dataset.index = index;
         img.className = 'gallery-image';
@@ -158,8 +181,64 @@ function loadPhotos() {
 // Setup event listeners
 function setupEventListeners() {
     // Music controls
-    musicToggle.addEventListener('click', toggleMusic);
-    songSelect.addEventListener('change', changeSong);
+    musicToggle.addEventListener('click', async () => {
+        const audio = document.getElementById('bgMusic');
+        
+        if (audio.paused) {
+            try {
+                if (!audioContext) {
+                    await initAudioContext();
+                    setupVisualizer();
+                }
+                if (audioContext.state === 'suspended') {
+                    await audioContext.resume();
+                }
+                
+                // Load the selected song
+                const selectedSong = songSelect.value;
+                const sources = audio.getElementsByTagName('source');
+                for (let source of sources) {
+                    if (source.src.endsWith(selectedSong)) {
+                        audio.load(); // Force reload
+                        break;
+                    }
+                }
+                
+                await audio.play();
+                musicToggle.innerHTML = '<i class="fas fa-pause"></i>';
+                isPlaying = true;
+            } catch (error) {
+                console.error('Error playing audio:', error);
+                showError(`Error playing audio: ${error.message}`);
+            }
+        } else {
+            audio.pause();
+            musicToggle.innerHTML = '<i class="fas fa-music"></i>';
+            isPlaying = false;
+        }
+    });
+    
+    songSelect.addEventListener('change', async (e) => {
+        const audio = document.getElementById('bgMusic');
+        const selectedSong = e.target.value;
+        
+        try {
+            // Update source elements
+            const sources = audio.getElementsByTagName('source');
+            for (let source of sources) {
+                if (source.src.endsWith(selectedSong)) {
+                    audio.load(); // Force reload
+                    if (isPlaying) {
+                        await audio.play();
+                    }
+                    break;
+                }
+            }
+        } catch (error) {
+            console.error('Error changing song:', error);
+            showError(`Error changing song: ${error.message}`);
+        }
+    });
     
     // Style controls
     styleSelect.addEventListener('change', changePhotoStyle);
