@@ -1,12 +1,14 @@
+// Get the base URL for GitHub Pages
+const baseUrl = window.location.hostname === 'sameerkarur.github.io'
+    ? '/valentines-website'
+    : '';
+
 // Constants
 const SONGS = [
-    { name: 'Perfect', path: 'https://sameerkarur.github.io/valentines-website/music/perfect.mp3' },
-    { name: 'All of Me', path: 'https://sameerkarur.github.io/valentines-website/music/all_of_me.mp3' },
-    { name: 'A Thousand Years', path: 'https://sameerkarur.github.io/valentines-website/music/a_thousand_years.mp3' }
+    { name: 'Perfect', path: `${baseUrl}/music/perfect.mp3` },
+    { name: 'All of Me', path: `${baseUrl}/music/all_of_me.mp3` },
+    { name: 'A Thousand Years', path: `${baseUrl}/music/a_thousand_years.mp3` }
 ];
-
-// Get the base URL for GitHub Pages
-const GITHUB_PAGES_URL = 'https://sameerkarur.github.io/valentines-website';
 
 // List of photos with their exact filenames
 const PHOTOS = [
@@ -93,7 +95,7 @@ function loadPhotos() {
         container.className = 'gallery-item';
 
         const img = document.createElement('img');
-        img.src = `${GITHUB_PAGES_URL}/images/${photo.filename}`;
+        img.src = `${baseUrl}/images/${photo.filename}`;
         img.alt = photo.title;
         img.dataset.index = index;
         img.className = 'gallery-image';
