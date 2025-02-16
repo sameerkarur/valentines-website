@@ -10,24 +10,25 @@ const baseUrl = window.location.hostname === 'sameerkarur.github.io'
     ? '/valentines-website'
     : '';
 
+// List of photos with their exact filenames
 const PHOTOS = [
-    'DSC00873.jpg',
-    'DSC00877.JPG',
-    'DSC00891.jpg',
-    'DSC00903.JPG',
-    'DSC00908.JPG',
-    'DSC00920.JPG',
-    'DSC00937.JPG',
-    'DSC00963.jpg',
-    'IMG-20250104-WA0059.jpg',
-    'IMG-20250104-WA0060.jpg',
-    'IMG-20250104-WA0065.jpg',
-    'IMG_20250101_081013249.jpg',
-    'IMG_20250102_093659519.jpg',
-    'IMG_20250103_151133702.jpg',
-    'IMG_20250103_211044204.jpg',
-    'InShot_20250106_103710485.jpg'
-].map(filename => `${baseUrl}/images/${filename}`);
+    { filename: 'DSC00873.jpg', title: 'Beach Photo 1' },
+    { filename: 'DSC00877.JPG', title: 'Beach Photo 2' },
+    { filename: 'DSC00891.jpg', title: 'Beach Photo 3' },
+    { filename: 'DSC00903.JPG', title: 'Beach Photo 4' },
+    { filename: 'DSC00908.JPG', title: 'Beach Photo 5' },
+    { filename: 'DSC00920.JPG', title: 'Beach Photo 6' },
+    { filename: 'DSC00937.JPG', title: 'Beach Photo 7' },
+    { filename: 'DSC00963.jpg', title: 'Beach Photo 8' },
+    { filename: 'IMG-20250104-WA0059.jpg', title: 'Special Moment 1' },
+    { filename: 'IMG-20250104-WA0060.jpg', title: 'Special Moment 2' },
+    { filename: 'IMG-20250104-WA0065.jpg', title: 'Special Moment 3' },
+    { filename: 'IMG_20250101_081013249.jpg', title: 'New Year Photo 1' },
+    { filename: 'IMG_20250102_093659519.jpg', title: 'New Year Photo 2' },
+    { filename: 'IMG_20250103_151133702.jpg', title: 'New Year Photo 3' },
+    { filename: 'IMG_20250103_211044204.jpg', title: 'New Year Photo 4' },
+    { filename: 'InShot_20250106_103710485.jpg', title: 'Special Edit' }
+];
 
 // Audio Context and Analyzer
 let audioContext;
@@ -89,25 +90,44 @@ function loadPhotos() {
     gallery.appendChild(loading);
 
     // Load each photo
-    PHOTOS.forEach((photoUrl, index) => {
+    PHOTOS.forEach((photo, index) => {
+        const container = document.createElement('div');
+        container.className = 'gallery-item';
+
         const img = document.createElement('img');
-        img.src = photoUrl;
-        img.alt = `Photo ${index + 1}`;
+        img.src = `${baseUrl}/images/${photo.filename}`;
+        img.alt = photo.title;
         img.dataset.index = index;
         img.className = 'gallery-image';
 
         // Add loading and error handlers
         img.onload = () => {
-            console.log(`Successfully loaded photo ${index + 1}`);
+            console.log(`Successfully loaded: ${photo.filename}`);
+            container.classList.add('loaded');
         };
 
         img.onerror = () => {
-            console.error(`Failed to load photo ${index + 1}: ${photoUrl}`);
+            console.error(`Failed to load: ${photo.filename}`);
+            showError(`Failed to load image: ${photo.title}`);
+            
+            // Try to fetch the image directly to get more error details
+            fetch(`${baseUrl}/images/${photo.filename}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    showError(`Network error: ${error.message}`);
+                });
+
+            // Set a placeholder image
             img.src = 'data:image/svg+xml,' + encodeURIComponent(`
                 <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
                     <rect width="200" height="200" fill="#f8f9fa"/>
                     <text x="50%" y="45%" text-anchor="middle" fill="#dc3545" style="font-size: 16px;">Image Failed to Load</text>
-                    <text x="50%" y="55%" text-anchor="middle" fill="#6c757d" style="font-size: 12px;">Photo ${index + 1}</text>
+                    <text x="50%" y="55%" text-anchor="middle" fill="#6c757d" style="font-size: 12px;">${photo.title}</text>
                 </svg>
             `);
         };
