@@ -340,15 +340,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Using the baseUrl defined above
 
-            // List of image files with both lowercase and uppercase extensions
+            // List of image files with exact case-sensitive extensions
             const imageFiles = [
                 'DSC00873.jpg',
-                'DSC00877.jpg',
+                'DSC00877.JPG',
                 'DSC00891.jpg',
-                'DSC00903.jpg',
-                'DSC00908.jpg',
-                'DSC00920.jpg',
-                'DSC00937.jpg',
+                'DSC00903.JPG',
+                'DSC00908.JPG',
+                'DSC00920.JPG',
+                'DSC00937.JPG',
                 'DSC00963.jpg',
                 'IMG-20250104-WA0059.jpg',
                 'IMG-20250104-WA0060.jpg',
@@ -364,14 +364,19 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Base URL:', baseUrl);
             console.log('First image path:', `${baseUrl}/images/${imageFiles[0]}`);
 
-            // Normalize image filenames to lowercase
+            // Create image objects with full URLs
             images = imageFiles.map(filename => {
-                const normalizedFilename = filename.toLowerCase();
+                const fullUrl = `${baseUrl}/images/${filename}`;
+                console.log('Creating image URL:', fullUrl);
                 return {
-                    src: `${baseUrl}/images/${filename}`,
-                    caption: filename.replace(/\.(jpg|jpeg|png|gif)$/i, '').replace(/_/g, ' ')
+                    src: fullUrl,
+                    caption: filename.replace(/\.(jpg|jpeg|png|gif)$/i, '').replace(/_/g, ' '),
+                    filename: filename // Keep original filename for reference
                 };
             });
+
+            // Log all image URLs for debugging
+            console.log('All image URLs:', images.map(img => img.src));
 
             // Create gallery items
             images.forEach((image, index) => {
