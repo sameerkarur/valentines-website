@@ -398,7 +398,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Modal functionality
     const modal = document.getElementById('imageModal');
     const modalImg = document.getElementById('modalImage');
-    const captionText = document.querySelector('.modal-caption');
+
     const closeBtn = document.querySelector('.close-btn');
     const prevBtn = document.querySelector('.prev-btn');
     const nextBtn = document.querySelector('.next-btn');
@@ -411,7 +411,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function showImage(index) {
         currentImageIndex = index;
         modalImg.src = images[index].src;
-        captionText.style.display = 'none';
         
         // In slideshow mode, always show navigation buttons for continuous loop
         if (isSlideshow) {
