@@ -340,15 +340,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Using the baseUrl defined above
 
-            // List of image files
+            // List of image files with both lowercase and uppercase extensions
             const imageFiles = [
                 'DSC00873.jpg',
-                'DSC00877.JPG',
+                'DSC00877.jpg',
                 'DSC00891.jpg',
-                'DSC00903.JPG',
-                'DSC00908.JPG',
-                'DSC00920.JPG',
-                'DSC00937.JPG',
+                'DSC00903.jpg',
+                'DSC00908.jpg',
+                'DSC00920.jpg',
+                'DSC00937.jpg',
                 'DSC00963.jpg',
                 'IMG-20250104-WA0059.jpg',
                 'IMG-20250104-WA0060.jpg',
@@ -359,6 +359,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 'IMG_20250103_211044204.jpg',
                 'InShot_20250106_103710485.jpg'
             ];
+
+            // Log the base URL and full image paths for debugging
+            console.log('Base URL:', baseUrl);
+            console.log('First image path:', `${baseUrl}/images/${imageFiles[0]}`);
 
             // Normalize image filenames to lowercase
             images = imageFiles.map(filename => {
@@ -380,10 +384,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 img.alt = image.caption;
                 img.loading = 'lazy';
                 
+                // Log image loading attempt
+                console.log('Loading image:', image.src);
+                
+                // Add load event listener
+                img.onload = () => {
+                    console.log('Successfully loaded:', image.src);
+                };
+                
                 // Add error handling for images
                 img.onerror = () => {
                     console.error(`Failed to load image: ${image.src}`);
-                    img.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><text x="50%" y="50%" text-anchor="middle" dy=".3em">Image not found</text></svg>';
+                    // Show error message to user
+                    showError(`Failed to load image: ${image.caption}. Please check your internet connection and try refreshing the page.`);
+                    // Set a placeholder image
+                    img.src = 'data:image/svg+xml,' + encodeURIComponent(`
+                        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+                            <rect width="200" height="200" fill="#f8f9fa"/>
+                            <text x="50%" y="45%" text-anchor="middle" fill="#dc3545" style="font-size: 16px;">Image Failed to Load</text>
+                            <text x="50%" y="55%" text-anchor="middle" fill="#6c757d" style="font-size: 12px;">${image.caption}</text>
+                        </svg>
+                    `);
+                    // Try to fetch the image directly to get more error details
+                    fetch(image.src)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Fetch error:', error);
+                            showError(`Network error: ${error.message}`);
+                        });
                 };
 
                 item.appendChild(img);
