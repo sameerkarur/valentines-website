@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Valentine's Day!</title>
+    <script src="loader.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -66,10 +67,10 @@
 
     <main>
         <div class="gallery">
-        <div class="loading">
-            <div class="heart-loader"></div>
-            <p>Loading your beautiful memories...</p>
-        </div>
+            <div class="loading">
+                <div class="heart-loader"></div>
+                <p>Loading your beautiful memories...</p>
+            </div>
             <!-- Images will be loaded here via JavaScript -->
         </div>
 
@@ -85,6 +86,7 @@
     <div class="modal" id="imageModal">
         <span class="close-btn">&times;</span>
         <img class="modal-content" id="modalImage">
+        <div class="modal-caption"></div>
         <button class="nav-btn prev-btn">❮</button>
         <button class="nav-btn next-btn">❯</button>
     </div>
