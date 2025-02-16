@@ -411,7 +411,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function showImage(index) {
         currentImageIndex = index;
         modalImg.src = images[index].src;
-        captionText.innerHTML = images[index].caption;
+        captionText.style.display = 'none';
         
         // In slideshow mode, always show navigation buttons for continuous loop
         if (isSlideshow) {
