@@ -115,9 +115,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load available songs
     const songs = [
-        { name: 'Perfect', file: 'music/perfect.mp3' },
-        { name: 'All of Me', file: 'music/all-of-me.mp3' },
-        { name: 'A Thousand Years', file: 'music/a-thousand-years.mp3' }
+        { name: 'Perfect', file: './music/perfect.mp3' },
+        { name: 'All of Me', file: './music/all-of-me.mp3' },
+        { name: 'A Thousand Years', file: './music/a-thousand-years.mp3' }
     ];
 
     // Verify music files are accessible
@@ -325,20 +325,28 @@ document.addEventListener('DOMContentLoaded', function() {
         const gallery = document.querySelector('.gallery');
         
         try {
-            const response = await fetch('/happy_valentines/images');
-            if (!response.ok) throw new Error('Failed to load images');
-            
-            const data = await response.text();
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(data, 'text/html');
-            
-            // Get all image files from the directory listing
-            images = Array.from(doc.querySelectorAll('a'))
-                .filter(a => a.href.match(/\.(jpg|jpeg|png|gif)$/i))
-                .map(a => ({
-                    src: `images/${a.textContent}`,
-                    caption: a.textContent.replace(/\.(jpg|jpeg|png|gif)$/i, '').replace(/_/g, ' ')
+            // Get all image files from the images directory
+            images = [
+                ...document.querySelectorAll('img[src^="./images/"]')
+            ].map(img => ({
+                src: img.src,
+                caption: img.src.split('/').pop().replace(/\.(jpg|jpeg|png|gif)$/i, '').replace(/_/g, ' ')
+            }));
+
+            // If no images are found in the DOM, load them from the directory
+            if (images.length === 0) {
+                const imageFiles = await getImagesFromDirectory();
+                images = imageFiles.map(filename => ({
+                    src: `./images/${filename}`,
+                    caption: filename.replace(/\.(jpg|jpeg|png|gif)$/i, '').replace(/_/g, ' ')
                 }));
+            }
+
+            // Remove loading indicator
+            const loading = gallery.querySelector('.loading');
+            if (loading) {
+                loading.remove();
+            }
 
             // Create gallery items
             images.forEach((image, index) => {
@@ -350,8 +358,23 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         } catch (error) {
             console.error('Error loading images:', error);
-            gallery.innerHTML = '<p>Please add your photos to the images folder.</p>';
+            showError('Failed to load images. Please refresh the page.');
         }
+    }
+
+    // Function to get images from directory
+    async function getImagesFromDirectory() {
+        const response = await fetch('./images/');
+        if (!response.ok) throw new Error('Failed to load images');
+        
+        const data = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(data, 'text/html');
+        
+        // Get all image files from the directory listing
+        return Array.from(doc.querySelectorAll('a'))
+            .filter(a => a.href.match(/\.(jpg|jpeg|png|gif)$/i))
+            .map(a => a.textContent);
     }
 
     // Modal functionality
