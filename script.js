@@ -114,8 +114,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let isPlaying = false;
 
     // Get the base URL for GitHub Pages
-    const baseUrl = window.location.hostname === 'sameerkarur.github.io'
-        ? '/valentines-website'
+    const baseUrl = window.location.pathname.includes('valentines-website') 
+        ? '/valentines-website' 
         : '';
 
     // Load available songs
@@ -129,14 +129,12 @@ document.addEventListener('DOMContentLoaded', function() {
     async function checkMusicFiles() {
         for (const song of songs) {
             try {
-                console.log('Trying to load:', song.file);
                 const response = await fetch(song.file);
                 if (!response.ok) {
-                    console.error(`Error loading ${song.name}:`, response.status, response.statusText);
-                    showError(`Could not load ${song.name}. Please check if the music file exists. Response: ${response.status} ${response.statusText}`);
+                        console.error(`Error loading ${song.name}:`, response.status, response.statusText);
+                    showError(`Could not load ${song.name}. Please check if the music file exists.`);
                     throw new Error(`Could not load ${song.name}`);
                 }
-                console.log(`Successfully loaded ${song.name}`);
             } catch (error) {
                 console.error(`Error checking ${song.name}:`, error);
                 showError(`Error: Could not access ${song.name}. Please make sure the music files are in the correct location.`);
@@ -340,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Using the baseUrl defined above
 
-            // List of image files with exact case-sensitive extensions
+            // List of image files
             const imageFiles = [
                 'DSC00873.jpg',
                 'DSC00877.JPG',
@@ -360,23 +358,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 'InShot_20250106_103710485.jpg'
             ];
 
-            // Log the base URL and full image paths for debugging
-            console.log('Base URL:', baseUrl);
-            console.log('First image path:', `${baseUrl}/images/${imageFiles[0]}`);
-
-            // Create image objects with full URLs
-            images = imageFiles.map(filename => {
-                const fullUrl = `${baseUrl}/images/${filename}`;
-                console.log('Creating image URL:', fullUrl);
-                return {
-                    src: fullUrl,
-                    caption: filename.replace(/\.(jpg|jpeg|png|gif)$/i, '').replace(/_/g, ' '),
-                    filename: filename // Keep original filename for reference
-                };
-            });
-
-            // Log all image URLs for debugging
-            console.log('All image URLs:', images.map(img => img.src));
+            images = imageFiles.map(filename => ({
+                src: `${baseUrl}/images/${filename}`,
+                caption: filename.replace(/\.(jpg|jpeg|png|gif)$/i, '').replace(/_/g, ' ')
+            }));
 
             // Create gallery items
             images.forEach((image, index) => {
@@ -389,38 +374,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 img.alt = image.caption;
                 img.loading = 'lazy';
                 
-                // Log image loading attempt
-                console.log('Loading image:', image.src);
-                
-                // Add load event listener
-                img.onload = () => {
-                    console.log('Successfully loaded:', image.src);
-                };
-                
                 // Add error handling for images
                 img.onerror = () => {
                     console.error(`Failed to load image: ${image.src}`);
-                    // Show error message to user
-                    showError(`Failed to load image: ${image.caption}. Please check your internet connection and try refreshing the page.`);
-                    // Set a placeholder image
-                    img.src = 'data:image/svg+xml,' + encodeURIComponent(`
-                        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
-                            <rect width="200" height="200" fill="#f8f9fa"/>
-                            <text x="50%" y="45%" text-anchor="middle" fill="#dc3545" style="font-size: 16px;">Image Failed to Load</text>
-                            <text x="50%" y="55%" text-anchor="middle" fill="#6c757d" style="font-size: 12px;">${image.caption}</text>
-                        </svg>
-                    `);
-                    // Try to fetch the image directly to get more error details
-                    fetch(image.src)
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error(`HTTP error! status: ${response.status}`);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Fetch error:', error);
-                            showError(`Network error: ${error.message}`);
-                        });
+                    img.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><text x="50%" y="50%" text-anchor="middle" dy=".3em">Image not found</text></svg>';
                 };
 
                 item.appendChild(img);
