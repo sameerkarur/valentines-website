@@ -115,9 +115,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load available songs
     const songs = [
-        { name: 'Perfect', file: './music/perfect.mp3' },
-        { name: 'All of Me', file: './music/all-of-me.mp3' },
-        { name: 'A Thousand Years', file: './music/a-thousand-years.mp3' }
+        { name: 'Perfect', file: '/valentines-website/music/perfect.mp3' },
+        { name: 'All of Me', file: '/valentines-website/music/all-of-me.mp3' },
+        { name: 'A Thousand Years', file: '/valentines-website/music/a-thousand-years.mp3' }
     ];
 
     // Verify music files are accessible
@@ -331,6 +331,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 loading.remove();
             }
 
+            // Get the base URL for GitHub Pages
+            const baseUrl = window.location.pathname.includes('valentines-website') 
+                ? '/valentines-website' 
+                : '';
+
             // List of image files
             const imageFiles = [
                 'DSC00873.jpg',
@@ -352,7 +357,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ];
 
             images = imageFiles.map(filename => ({
-                src: `./images/${filename}`,
+                src: `${baseUrl}/images/${filename}`,
                 caption: filename.replace(/\.(jpg|jpeg|png|gif)$/i, '').replace(/_/g, ' ')
             }));
 
@@ -360,7 +365,20 @@ document.addEventListener('DOMContentLoaded', function() {
             images.forEach((image, index) => {
                 const item = document.createElement('div');
                 item.className = 'gallery-item animate__animated animate__fadeIn';
-                item.innerHTML = `<img src="${image.src}" alt="${image.caption}" loading="lazy">`;
+                
+                // Create and configure image element
+                const img = document.createElement('img');
+                img.src = image.src;
+                img.alt = image.caption;
+                img.loading = 'lazy';
+                
+                // Add error handling for images
+                img.onerror = () => {
+                    console.error(`Failed to load image: ${image.src}`);
+                    img.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><text x="50%" y="50%" text-anchor="middle" dy=".3em">Image not found</text></svg>';
+                };
+
+                item.appendChild(img);
                 item.onclick = () => openModal(index);
                 gallery.appendChild(item);
             });
