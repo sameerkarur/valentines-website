@@ -114,8 +114,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let isPlaying = false;
 
     // Get the base URL for GitHub Pages
-    const baseUrl = window.location.pathname.includes('valentines-website') 
-        ? '/valentines-website' 
+    const baseUrl = window.location.hostname === 'sameerkarur.github.io'
+        ? '/valentines-website'
         : '';
 
     // Load available songs
@@ -129,12 +129,14 @@ document.addEventListener('DOMContentLoaded', function() {
     async function checkMusicFiles() {
         for (const song of songs) {
             try {
+                console.log('Trying to load:', song.file);
                 const response = await fetch(song.file);
                 if (!response.ok) {
-                        console.error(`Error loading ${song.name}:`, response.status, response.statusText);
-                    showError(`Could not load ${song.name}. Please check if the music file exists.`);
+                    console.error(`Error loading ${song.name}:`, response.status, response.statusText);
+                    showError(`Could not load ${song.name}. Please check if the music file exists. Response: ${response.status} ${response.statusText}`);
                     throw new Error(`Could not load ${song.name}`);
                 }
+                console.log(`Successfully loaded ${song.name}`);
             } catch (error) {
                 console.error(`Error checking ${song.name}:`, error);
                 showError(`Error: Could not access ${song.name}. Please make sure the music files are in the correct location.`);
@@ -358,10 +360,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 'InShot_20250106_103710485.jpg'
             ];
 
-            images = imageFiles.map(filename => ({
-                src: `${baseUrl}/images/${filename}`,
-                caption: filename.replace(/\.(jpg|jpeg|png|gif)$/i, '').replace(/_/g, ' ')
-            }));
+            // Normalize image filenames to lowercase
+            images = imageFiles.map(filename => {
+                const normalizedFilename = filename.toLowerCase();
+                return {
+                    src: `${baseUrl}/images/${filename}`,
+                    caption: filename.replace(/\.(jpg|jpeg|png|gif)$/i, '').replace(/_/g, ' ')
+                };
+            });
 
             // Create gallery items
             images.forEach((image, index) => {
