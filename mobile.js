@@ -1,14 +1,18 @@
-// Get the base URL for GitHub Pages
-const baseUrl = window.location.hostname === 'sameerkarur.github.io'
-    ? '/valentines-website'
-    : '';
+// Use baseUrl from HTML
+const baseUrl = window.baseUrl;
+console.log('Using baseUrl from HTML:', baseUrl);
 
 // Constants
 const SONGS = [
     { name: 'Perfect', path: `${baseUrl}/music/perfect.mp3` },
-    { name: 'All of Me', path: `${baseUrl}/music/all_of_me.mp3` },
-    { name: 'A Thousand Years', path: `${baseUrl}/music/a_thousand_years.mp3` }
+    { name: 'All of Me', path: `${baseUrl}/music/all-of-me.mp3` },
+    { name: 'A Thousand Years', path: `${baseUrl}/music/a-thousand-years.mp3` }
 ];
+
+// Debug log the base URL and full paths
+console.log('Base URL:', baseUrl);
+console.log('Example image path:', `${baseUrl}/images/DSC00873.jpg`);
+console.log('Example music path:', `${baseUrl}/music/perfect.mp3`);
 
 // List of photos with their exact filenames
 const PHOTOS = [
@@ -114,14 +118,20 @@ function loadPhotos() {
 
         img.onerror = () => {
             console.error(`Failed to load: ${photo.filename}`);
+            console.error('Full image URL:', img.src);
             showError(`Failed to load image: ${photo.title}`);
             
             // Try to fetch the image directly to get more error details
-            fetch(`${baseUrl}/images/${photo.filename}`)
+            fetch(img.src)
                 .then(response => {
+                    console.log('Fetch response:', response.status, response.statusText);
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
+                    return response.blob();
+                })
+                .then(blob => {
+                    console.log('Image blob:', blob.type, blob.size);
                 })
                 .catch(error => {
                     console.error('Fetch error:', error);
