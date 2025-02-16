@@ -325,56 +325,56 @@ document.addEventListener('DOMContentLoaded', function() {
         const gallery = document.querySelector('.gallery');
         
         try {
-            // Get all image files from the images directory
-            images = [
-                ...document.querySelectorAll('img[src^="./images/"]')
-            ].map(img => ({
-                src: img.src,
-                caption: img.src.split('/').pop().replace(/\.(jpg|jpeg|png|gif)$/i, '').replace(/_/g, ' ')
-            }));
-
-            // If no images are found in the DOM, load them from the directory
-            if (images.length === 0) {
-                const imageFiles = await getImagesFromDirectory();
-                images = imageFiles.map(filename => ({
-                    src: `./images/${filename}`,
-                    caption: filename.replace(/\.(jpg|jpeg|png|gif)$/i, '').replace(/_/g, ' ')
-                }));
-            }
-
             // Remove loading indicator
             const loading = gallery.querySelector('.loading');
             if (loading) {
                 loading.remove();
             }
 
+            // List of image files
+            const imageFiles = [
+                'DSC00873.jpg',
+                'DSC00877.JPG',
+                'DSC00891.jpg',
+                'DSC00903.JPG',
+                'DSC00908.JPG',
+                'DSC00920.JPG',
+                'DSC00937.JPG',
+                'DSC00963.jpg',
+                'IMG-20250104-WA0059.jpg',
+                'IMG-20250104-WA0060.jpg',
+                'IMG-20250104-WA0065.jpg',
+                'IMG_20250101_081013249.jpg',
+                'IMG_20250102_093659519.jpg',
+                'IMG_20250103_151133702.jpg',
+                'IMG_20250103_211044204.jpg',
+                'InShot_20250106_103710485.jpg'
+            ];
+
+            images = imageFiles.map(filename => ({
+                src: `./images/${filename}`,
+                caption: filename.replace(/\.(jpg|jpeg|png|gif)$/i, '').replace(/_/g, ' ')
+            }));
+
             // Create gallery items
             images.forEach((image, index) => {
                 const item = document.createElement('div');
                 item.className = 'gallery-item animate__animated animate__fadeIn';
-                item.innerHTML = `<img src="${image.src}" alt="${image.caption}">`;
+                item.innerHTML = `<img src="${image.src}" alt="${image.caption}" loading="lazy">`;
                 item.onclick = () => openModal(index);
                 gallery.appendChild(item);
             });
+
+            // Preload images
+            images.forEach(image => {
+                const img = new Image();
+                img.src = image.src;
+            });
+
         } catch (error) {
             console.error('Error loading images:', error);
             showError('Failed to load images. Please refresh the page.');
         }
-    }
-
-    // Function to get images from directory
-    async function getImagesFromDirectory() {
-        const response = await fetch('./images/');
-        if (!response.ok) throw new Error('Failed to load images');
-        
-        const data = await response.text();
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(data, 'text/html');
-        
-        // Get all image files from the directory listing
-        return Array.from(doc.querySelectorAll('a'))
-            .filter(a => a.href.match(/\.(jpg|jpeg|png|gif)$/i))
-            .map(a => a.textContent);
     }
 
     // Modal functionality
