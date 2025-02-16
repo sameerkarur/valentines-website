@@ -113,11 +113,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const audio = document.getElementById('bgMusic');
     let isPlaying = false;
 
+    // Get the base URL for GitHub Pages
+    const baseUrl = window.location.pathname.includes('valentines-website') 
+        ? '/valentines-website' 
+        : '';
+
     // Load available songs
     const songs = [
-        { name: 'Perfect', file: '/valentines-website/music/perfect.mp3' },
-        { name: 'All of Me', file: '/valentines-website/music/all-of-me.mp3' },
-        { name: 'A Thousand Years', file: '/valentines-website/music/a-thousand-years.mp3' }
+        { name: 'Perfect', file: `${baseUrl}/music/perfect.mp3` },
+        { name: 'All of Me', file: `${baseUrl}/music/all-of-me.mp3` },
+        { name: 'A Thousand Years', file: `${baseUrl}/music/a-thousand-years.mp3` }
     ];
 
     // Verify music files are accessible
@@ -331,10 +336,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 loading.remove();
             }
 
-            // Get the base URL for GitHub Pages
-            const baseUrl = window.location.pathname.includes('valentines-website') 
-                ? '/valentines-website' 
-                : '';
+            // Using the baseUrl defined above
 
             // List of image files
             const imageFiles = [
