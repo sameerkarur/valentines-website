@@ -53,7 +53,10 @@ header h1 {
     border-radius: 10px;
     margin: 0 1rem 1rem;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    position: relative; /* Changed from absolute to relative */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 .music-player, .style-controls, .slideshow-controls {
@@ -175,7 +178,7 @@ header h1 {
 
 /* Audio visualizer */
 .visualizer {
-    width: 100%;
+    position: fixed;
     height: 50px;
     margin-bottom: 1rem;
 }
